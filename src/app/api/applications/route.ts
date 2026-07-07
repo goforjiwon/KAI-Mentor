@@ -65,21 +65,13 @@ export async function POST(request: Request) {
     }
 
     const notifications = {
-      email:
-        emailResult.status === "fulfilled"
-          ? { ok: true as const }
-          : {
-              ok: false as const,
-              reason: String(
-                (emailResult.reason as Error)?.message ?? emailResult.reason
-              ),
-            },
+      email: unwrap(emailResult),
       kakao: unwrap(kakaoResult),
       telegram: unwrap(telegramResult),
     };
 
-    if (!notifications.email.ok) {
-      console.error("[applications] 이메일 실패:", notifications.email.reason);
+    if (emailResult.status === "rejected") {
+      console.error("[applications] 이메일 실패:", notifications.email);
     }
 
     return NextResponse.json(

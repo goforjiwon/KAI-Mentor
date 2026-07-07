@@ -162,15 +162,7 @@ export default function HomePage() {
 
       {/* 푸터 */}
       <footer className="border-t py-6 px-4 text-center text-xs text-slate-400">
-        © 2025 카이멘토 (KAIMentor) — 세종 KAIST 멘토 매칭 ·{" "}
-        <a
-          href="https://www.perplexity.ai/computer"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-slate-600 transition-colors"
-        >
-          Created with Perplexity Computer
-        </a>
+        © 2025 카이멘토 (KAIMentor) — 세종 KAIST 멘토 매칭
       </footer>
     </div>
   );

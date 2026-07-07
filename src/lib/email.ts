@@ -80,12 +80,9 @@ export async function sendApplicationEmail(payload: ApplicationPayload) {
   const resendApiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.APPLICATION_EMAIL_FROM;
 
-  if (!resendApiKey) {
-    throw new Error("RESEND_API_KEY가 설정되지 않았습니다.");
-  }
-
-  if (!fromEmail) {
-    throw new Error("APPLICATION_EMAIL_FROM이 설정되지 않았습니다.");
+  if (!resendApiKey || !fromEmail) {
+    console.warn("[email] 환경변수 미설정 — 이메일 알림 건너뜀");
+    return { sent: false, reason: "env_missing" };
   }
 
   const res = await fetch(RESEND_API_URL, {
@@ -107,4 +104,6 @@ export async function sendApplicationEmail(payload: ApplicationPayload) {
     const errorText = await res.text();
     throw new Error(`Resend API 오류(${res.status}): ${errorText}`);
   }
+
+  return { sent: true };
 }

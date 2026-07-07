@@ -41,8 +41,8 @@
 | `SUPABASE_URL` | 1-3에서 복사한 Project URL | 필수 |
 | `SUPABASE_SERVICE_ROLE_KEY` | 1-3에서 복사한 service_role key | 필수 |
 | `ADMIN_PASSWORD` | 원하는 비밀번호 (예: `kmentor-admin-2026!`) | `/admin` 로그인용 |
-| `RESEND_API_KEY` | 기존 값 유지 | 이메일 알림 (이미 설정돼 있을 것) |
-| `APPLICATION_EMAIL_FROM` | 기존 값 유지 | 이메일 발신 주소 |
+| `RESEND_API_KEY` | Resend API Key | 이메일 알림 (선택, 없으면 이메일만 건너뜀) |
+| `APPLICATION_EMAIL_FROM` | 인증된 발신 주소 | 이메일 발신 주소 (선택, 없으면 이메일만 건너뜀) |
 | `SITE_URL` | `https://kmentor-eight.vercel.app` | 카톡 메시지 링크용 |
 
 3. 저장 후 **Deployments** 탭 → 최신 배포 우측 `⋯` → **Redeploy** (환경변수는 재배포해야 적용됨)
@@ -115,7 +115,7 @@ curl -X POST https://kauth.kakao.com/oauth/token \
 
 1. https://kmentor-eight.vercel.app/apply 에서 테스트 신청 한 건 제출
 2. Supabase 대시보드 → **Table Editor > applications** 테이블에 새 행이 들어왔는지 확인
-3. `goforjiwon@gmail.com` 으로 이메일 도착 확인
+3. 이메일 알림을 설정했다면 `goforjiwon@gmail.com` 으로 이메일 도착 확인
 4. 카카오 설정했으면 내 카톡 "나와의 채팅"에 알림 도착 확인
 5. https://kmentor-eight.vercel.app/admin 접속 → `ADMIN_PASSWORD` 입력 → 대시보드에 방금 제출한 신청이 보이는지 확인
 6. 상태 변경·메모 저장 테스트
