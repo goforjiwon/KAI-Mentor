@@ -60,3 +60,17 @@ export type ApplicationRow = {
   status: ApplicationStatus;
   admin_memo: string | null;
 };
+
+export type MentorStatus = "new" | "active" | "inactive" | "blocked";
+
+export type MentorRow = {
+  id: string;
+  created_at: string;
+  name: string;
+  phone: string;
+  major: string;
+  subjects: string;
+  teaching_mode: string;
+  memo: string;
+  status: MentorStatus;
+};

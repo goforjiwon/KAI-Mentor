@@ -74,4 +74,10 @@ alter table public.mentors enable row level security;
 --   paid               => 강사 1만원 입금 완료
 --   closed             => 종료 (매칭 불발/거절 등)
 --   spam               => 스팸/테스트
+--
+-- 참고: mentors.status 값 규칙
+--   new      => 신규 등록
+--   active   => 활동 가능
+--   inactive => 일시 중지
+--   blocked  => 제외
 -- =========================================================================
