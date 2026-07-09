@@ -49,12 +49,20 @@ export default function HomePage() {
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="font-bold text-blue-700 text-lg tracking-tight">카이멘토</span>
-          <Link
-            href="/apply"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
-          >
-            신청하기
-          </Link>
+          <nav className="flex items-center gap-3">
+            <Link
+              href="/mentor-signup"
+              className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+            >
+              선생님 등록
+            </Link>
+            <Link
+              href="/apply"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+            >
+              신청하기
+            </Link>
+          </nav>
         </div>
       </header>
 

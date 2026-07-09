@@ -33,10 +33,34 @@ create index if not exists applications_created_at_idx
 create index if not exists applications_status_idx
   on public.applications (status);
 
--- 3) RLS (Row Level Security) 활성화
+-- 3) 선생님 등록 테이블
+create table if not exists public.mentors (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+
+  -- 선생님 제출 데이터
+  name text not null,
+  phone text not null,
+  major text not null,
+  subjects text not null,
+  teaching_mode text not null,
+  memo text not null default '',
+
+  -- 운영자 관리용
+  status text not null default 'new'
+);
+
+create index if not exists mentors_created_at_idx
+  on public.mentors (created_at desc);
+
+create index if not exists mentors_status_idx
+  on public.mentors (status);
+
+-- 4) RLS (Row Level Security) 활성화
 --    서비스 롤 키(Service Role)는 RLS를 무시하므로 서버 API에서는 모든 작업 가능.
 --    anon 키는 아무것도 못 하도록 정책을 아예 만들지 않는다 = default deny.
 alter table public.applications enable row level security;
+alter table public.mentors enable row level security;
 
 -- (정책을 굳이 안 만들어도 서비스 롤은 통과한다. anon에는 안전하게 접근 차단.)
 
