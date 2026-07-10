@@ -64,12 +64,11 @@ export default function HomePage() {
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                <p className="text-sm font-bold text-slate-900">학부모 신청 미리보기</p>
-                <div className="mt-5 space-y-4">
-                  <div><label className="mb-2 block text-xs font-semibold text-slate-600">학생 성별</label><div className="rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-400">선택해주세요</div></div>
-                  <div><label className="mb-2 block text-xs font-semibold text-slate-600">학교명</label><div className="rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-400">예: 세종중학교</div></div>
-                  <Link href="/apply" className="flex w-full justify-center rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white hover:bg-blue-700">신청서 작성하기</Link>
-                </div>
+                <p className="text-lg font-bold text-slate-900">멘토 추천이 필요하신가요?</p>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  학부모 회원가입 없이 신청서를 작성하면, 학생의 학교·학년과 학습 상황을 검토해 적합한 KAIST 선생님을 추천해드립니다.
+                </p>
+                <Link href="/apply" className="mt-6 flex w-full justify-center rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white hover:bg-blue-700">멘토 추천 신청서 작성하기</Link>
               </div>
             </div>
           </div>
