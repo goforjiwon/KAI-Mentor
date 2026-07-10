@@ -24,6 +24,23 @@ function getClient(): SupabaseClient {
   return cached;
 }
 
+export function createAuthServerClient(): SupabaseClient {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error(
+      "SUPABASE_URL 또는 SUPABASE_SERVICE_ROLE_KEY 환경변수가 설정되지 않았습니다."
+    );
+  }
+  return createClient(url, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
+    },
+  });
+}
+
 // 기존 코드가 supabaseAdmin.from(...) 형태로 쓰기 때문에 Proxy로 호환성 유지.
 export const supabaseAdmin = new Proxy({} as SupabaseClient, {
   get(_target, prop, receiver) {
@@ -48,6 +65,8 @@ export type ApplicationRow = {
   created_at: string;
   parent_name: string;
   phone: string;
+  student_gender: string;
+  school_name: string;
   grade: string;
   subjects: string[];
   current_level: string;
@@ -66,6 +85,8 @@ export type MentorStatus = "new" | "active" | "inactive" | "blocked";
 export type MentorRow = {
   id: string;
   created_at: string;
+  auth_user_id: string | null;
+  email: string | null;
   name: string;
   phone: string;
   major: string;
@@ -73,4 +94,25 @@ export type MentorRow = {
   teaching_mode: string;
   memo: string;
   status: MentorStatus;
+  credit_balance: number;
+  total_credits_purchased: number;
+  total_credits_used: number;
+};
+
+export type PurchaseOrderStatus = "pending" | "paid" | "mismatch" | "cancelled";
+
+export type PurchaseOrderRow = {
+  id: string;
+  created_at: string;
+  order_number: string;
+  mentor_id: string;
+  plan_code: string;
+  plan_name: string;
+  credit_count: number;
+  amount: number;
+  depositor_name: string;
+  status: PurchaseOrderStatus;
+  confirmed_at: string | null;
+  admin_note: string | null;
+  mentor?: Pick<MentorRow, "id" | "name" | "phone" | "credit_balance"> | null;
 };

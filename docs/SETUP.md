@@ -41,6 +41,7 @@
 | `SUPABASE_URL` | 1-3에서 복사한 Project URL | 필수 |
 | `SUPABASE_SERVICE_ROLE_KEY` | 1-3에서 복사한 service_role key | 필수 |
 | `ADMIN_PASSWORD` | 원하는 비밀번호 (예: `kmentor-admin-2026!`) | `/admin` 로그인용 |
+| `MENTOR_SESSION_SECRET` | 32자 이상의 무작위 문자열 | 선생님 로그인 세션 서명용 |
 | `RESEND_API_KEY` | Resend API Key | 이메일 알림 (선택, 없으면 이메일만 건너뜀) |
 | `APPLICATION_EMAIL_FROM` | 인증된 발신 주소 | 이메일 발신 주소 (선택, 없으면 이메일만 건너뜀) |
 | `SITE_URL` | `https://kmentor-eight.vercel.app` | 카톡 메시지 링크용 |
@@ -118,7 +119,14 @@ curl -X POST https://kauth.kakao.com/oauth/token \
 3. 이메일 알림을 설정했다면 `goforjiwon@gmail.com` 으로 이메일 도착 확인
 4. 카카오 설정했으면 내 카톡 "나와의 채팅"에 알림 도착 확인
 5. https://kmentor-eight.vercel.app/admin 접속 → `ADMIN_PASSWORD` 입력 → 대시보드에 방금 제출한 신청이 보이는지 확인
-6. 상태 변경·메모 저장 테스트
+6. `/mentor-signup`에서 선생님 계정을 만들고 `/teacher` 화면 진입 확인
+7. 첫 매칭 1회 이용권을 선택해 입금자명으로 확인 요청 생성
+8. `/admin`의 **입금·이용권** 탭에서 실제 입금 확인 후 **입금 확인·충전** 클릭
+9. 선생님 화면을 새로고침해 잔여 이용권이 1회 증가했는지 확인
+
+> 현재 계좌이체는 초기 운영용 수동 확인 방식입니다. 주문번호·입금자명·금액·상태가 저장되며,
+> 관리자가 확인한 주문만 데이터베이스 함수에서 한 번 충전됩니다. 거래량이 늘면 같은
+> `purchase_orders` 구조를 유지한 채 가상계좌 입금 웹훅으로 자동화할 수 있습니다.
 
 ---
 

@@ -4,4 +4,15 @@
 
 body {
   word-break: keep-all;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #dbeafe;
+  color: #1e3a8a;
 }

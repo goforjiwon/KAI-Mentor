@@ -60,8 +60,7 @@ export default function ThanksPage() {
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                시급과 과외비는, 마음에 드는 멘토와 직접 상의해서{" "}
-                <strong>자유롭게 정하시면 됩니다.</strong>
+                첫 상담 전 선생님의 가능 일정과 수업 방식을 함께 안내해드립니다.
               </span>
             </p>
           </div>
@@ -76,7 +75,7 @@ export default function ThanksPage() {
       </main>
 
       <footer className="border-t py-5 px-4 text-center text-xs text-slate-400">
-        © 2025 카이멘토 (KAIMentor)
+        © 2026 카이멘토 (KAIMentor)
       </footer>
     </div>
   );

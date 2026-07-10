@@ -8,6 +8,9 @@ const SUBJECTS = ["수학", "과학", "수학+과학"];
 const TEACHING_MODES = ["대면", "온라인", "둘 다"];
 
 type FormState = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
   name: string;
   phone: string;
   major: string;
@@ -24,6 +27,9 @@ export default function MentorSignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({
+    email: "",
+    password: "",
+    passwordConfirm: "",
     name: "",
     phone: "",
     major: "",
@@ -38,12 +44,22 @@ export default function MentorSignupPage() {
 
     if (
       !form.name.trim() ||
+      !form.email.trim() ||
+      !form.password ||
       !form.phone.trim() ||
       !form.major.trim() ||
       !form.subjects ||
       !form.teachingMode
     ) {
-      setError("이름, 연락처, 전공, 가능 과목, 가능 방식을 모두 입력해주세요.");
+      setError("이메일, 비밀번호, 이름, 연락처, 전공과 과외 정보를 모두 입력해주세요.");
+      return;
+    }
+    if (form.password.length < 8) {
+      setError("비밀번호는 8자 이상으로 입력해주세요.");
+      return;
+    }
+    if (form.password !== form.passwordConfirm) {
+      setError("비밀번호 확인이 일치하지 않습니다.");
       return;
     }
 
@@ -56,7 +72,7 @@ export default function MentorSignupPage() {
       });
       const json = await res.json();
       if (json.success) {
-        router.push("/mentor-signup/thanks");
+        router.push("/teacher");
       } else {
         setError(json.message ?? "오류가 발생했습니다. 다시 시도해주세요.");
       }
@@ -85,7 +101,7 @@ export default function MentorSignupPage() {
             카이멘토 선생님 등록
           </h1>
           <p className="text-sm text-slate-600">
-            카이멘토에서 과외 연결을 받기 위한 기본 정보를 입력해주세요.
+            계정을 만들고 상담 매칭 이용권과 연결 현황을 한곳에서 관리하세요.
           </p>
         </div>
 
@@ -95,6 +111,49 @@ export default function MentorSignupPage() {
               기본 정보
             </h2>
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  로그인 이메일 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  placeholder="예: mentor@kaist.ac.kr"
+                  className={INPUT_CLASS}
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    비밀번호 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="8자 이상"
+                    className={INPUT_CLASS}
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    비밀번호 확인 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="한 번 더 입력"
+                    className={INPUT_CLASS}
+                    value={form.passwordConfirm}
+                    onChange={(e) => setForm({ ...form, passwordConfirm: e.target.value })}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   이름 <span className="text-red-500">*</span>
@@ -213,11 +272,17 @@ export default function MentorSignupPage() {
               {loading ? "등록 중..." : "등록하기"}
             </button>
           </div>
+          <p className="text-center text-sm text-slate-500">
+            이미 계정이 있으신가요?{" "}
+            <Link href="/teacher/login" className="font-semibold text-blue-700 hover:underline">
+              선생님 로그인
+            </Link>
+          </p>
         </form>
       </main>
 
       <footer className="border-t py-5 px-4 text-center text-xs text-slate-400">
-        © 2025 카이멘토 (KAIMentor)
+        © 2026 카이멘토 (KAIMentor)
       </footer>
     </div>
   );

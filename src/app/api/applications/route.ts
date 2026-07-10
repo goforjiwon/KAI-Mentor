@@ -8,10 +8,14 @@ export async function POST(request: Request) {
   try {
     const payload = (await request.json()) as ApplicationPayload;
 
-    console.log("[applications] incoming payload:", JSON.stringify(payload));
-
     // 필수 필드 검증
-    if (!payload.parentName || !payload.phone || !payload.grade) {
+    if (
+      !payload.parentName ||
+      !payload.phone ||
+      !payload.studentGender ||
+      !payload.schoolName ||
+      !payload.grade
+    ) {
       return NextResponse.json(
         { success: false, message: "필수 항목을 입력해주세요." },
         { status: 400 }
@@ -24,6 +28,8 @@ export async function POST(request: Request) {
       .insert({
         parent_name: payload.parentName,
         phone: payload.phone,
+        student_gender: payload.studentGender,
+        school_name: payload.schoolName,
         grade: payload.grade,
         subjects: payload.subjects ?? [],
         current_level: payload.currentLevel ?? "",

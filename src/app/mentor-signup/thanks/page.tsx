@@ -49,7 +49,7 @@ export default function MentorSignupThanksPage() {
       </main>
 
       <footer className="border-t py-5 px-4 text-center text-xs text-slate-400">
-        © 2025 카이멘토 (KAIMentor)
+        © 2026 카이멘토 (KAIMentor)
       </footer>
     </div>
   );

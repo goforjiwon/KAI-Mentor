@@ -39,6 +39,8 @@ const MENTOR_PRIORITIES = [
 type FormState = {
   parentName: string;
   phone: string;
+  studentGender: string;
+  schoolName: string;
   grade: string;
   subjects: string[];
   currentLevel: string;
@@ -58,7 +60,7 @@ export default function ApplyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({
-    parentName: "", phone: "", grade: "",
+    parentName: "", phone: "", studentGender: "", schoolName: "", grade: "",
     subjects: [], currentLevel: "", difficulties: "",
     goal: "", goalDate: "", childPersonality: [],
     mentorPriority: "", extraNote: "",
@@ -77,8 +79,14 @@ export default function ApplyPage() {
     e.preventDefault();
     setError("");
 
-    if (!form.parentName.trim() || !form.phone.trim() || !form.grade) {
-      setError("학부모님 성함, 휴대폰 번호, 학년은 반드시 입력해주세요.");
+    if (
+      !form.parentName.trim() ||
+      !form.phone.trim() ||
+      !form.studentGender ||
+      !form.schoolName.trim() ||
+      !form.grade
+    ) {
+      setError("학부모님 성함, 연락처, 학생 성별, 학교명, 학년을 입력해주세요.");
       return;
     }
     if (form.subjects.length === 0) {
@@ -127,7 +135,7 @@ export default function ApplyPage() {
         {/* 안내 박스 */}
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
           <p className="text-sm text-blue-900 font-medium mb-1">
-            자녀분의 이름·학교 정보 없이, 학년과 수학·과학 관련 상황만으로 멘토를 추천해드립니다.
+            자녀 이름 없이, 학교·학년과 수학·과학 관련 상황만으로 멘토를 추천해드립니다.
           </p>
           <p className="text-xs text-blue-700">
             작성해주신 내용은 검증된 KAIST 재학생 멘토들만 참고하며, 학부모님께 수수료는 없습니다.
@@ -175,6 +183,42 @@ export default function ApplyPage() {
               자녀 학습 정보
             </h2>
             <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  학생 성별 <span className="text-red-500">*</span>
+                </label>
+                <div className="flex gap-5">
+                  {["남학생", "여학생"].map((gender) => (
+                    <label key={gender} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="studentGender"
+                        className="w-4 h-4 accent-blue-600"
+                        checked={form.studentGender === gender}
+                        onChange={() => setForm({ ...form, studentGender: gender })}
+                      />
+                      <span className="text-sm text-slate-700">{gender}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  학교명 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="예: 세종중학교"
+                  className={INPUT_CLASS}
+                  value={form.schoolName}
+                  onChange={(e) => setForm({ ...form, schoolName: e.target.value })}
+                />
+                <p className="mt-1.5 text-xs text-slate-500">
+                  통학 가능한 선생님을 찾는 용도로만 사용합니다.
+                </p>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   자녀 학년 <span className="text-red-500">*</span>
@@ -261,7 +305,7 @@ export default function ApplyPage() {
                 </label>
                 <input
                   type="text"
-                  placeholder="예: 2025년 1학기 중간고사까지, 올해 수능"
+                  placeholder="예: 2026년 1학기 중간고사까지, 올해 수능"
                   className={INPUT_CLASS}
                   value={form.goalDate}
                   onChange={(e) => setForm({ ...form, goalDate: e.target.value })}
@@ -363,7 +407,7 @@ export default function ApplyPage() {
       </main>
 
       <footer className="border-t py-5 px-4 text-center text-xs text-slate-400">
-        © 2025 카이멘토 (KAIMentor)
+        © 2026 카이멘토 (KAIMentor)
       </footer>
     </div>
   );

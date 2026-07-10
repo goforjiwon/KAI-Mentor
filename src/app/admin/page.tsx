@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { isAdminAuthed } from "@/lib/adminAuth";
-import { supabaseAdmin, type ApplicationRow, type MentorRow } from "@/lib/supabase";
+import {
+  supabaseAdmin,
+  type ApplicationRow,
+  type MentorRow,
+  type PurchaseOrderRow,
+} from "@/lib/supabase";
 import AdminDashboard from "./AdminDashboard";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +15,7 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const [applicationsResult, mentorsResult] = await Promise.all([
+  const [applicationsResult, mentorsResult, ordersResult] = await Promise.all([
     supabaseAdmin
     .from("applications")
     .select("*")
@@ -21,12 +26,17 @@ export default async function AdminPage() {
       .select("*")
       .order("created_at", { ascending: false })
       .limit(500),
+    supabaseAdmin
+      .from("purchase_orders")
+      .select("*, mentor:mentors(id,name,phone,credit_balance)")
+      .order("created_at", { ascending: false })
+      .limit(500),
   ]);
 
-  if (applicationsResult.error || mentorsResult.error) {
+  if (applicationsResult.error || mentorsResult.error || ordersResult.error) {
     return (
       <div className="p-8 text-red-600">
-        DB 조회 오류: {applicationsResult.error?.message ?? mentorsResult.error?.message}
+        DB 조회 오류: {applicationsResult.error?.message ?? mentorsResult.error?.message ?? ordersResult.error?.message}
       </div>
     );
   }
@@ -35,6 +45,7 @@ export default async function AdminPage() {
     <AdminDashboard
       initialApplications={(applicationsResult.data ?? []) as ApplicationRow[]}
       initialMentors={(mentorsResult.data ?? []) as MentorRow[]}
+      initialOrders={(ordersResult.data ?? []) as PurchaseOrderRow[]}
     />
   );
 }

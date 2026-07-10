@@ -1,6 +1,8 @@
 export type ApplicationPayload = {
   parentName: string;
   phone: string;
+  studentGender: string;
+  schoolName: string;
   grade: string;
   subjects: string[];
   currentLevel: string;
@@ -30,6 +32,8 @@ function makeTextBody(payload: ApplicationPayload) {
     "",
     `- 학부모님 성함: ${emptyFallback(payload.parentName)}`,
     `- 연락처: ${emptyFallback(payload.phone)}`,
+    `- 학생 성별: ${emptyFallback(payload.studentGender)}`,
+    `- 학교명: ${emptyFallback(payload.schoolName)}`,
     `- 학년: ${emptyFallback(payload.grade)}`,
     `- 도움이 필요한 과목: ${joinOrEmpty(payload.subjects)}`,
     `- 현재 성적·수준: ${emptyFallback(payload.currentLevel)}`,
@@ -46,6 +50,8 @@ function makeHtmlBody(payload: ApplicationPayload) {
   const rows = [
     ["학부모님 성함", emptyFallback(payload.parentName)],
     ["연락처", emptyFallback(payload.phone)],
+    ["학생 성별", emptyFallback(payload.studentGender)],
+    ["학교명", emptyFallback(payload.schoolName)],
     ["학년", emptyFallback(payload.grade)],
     ["도움이 필요한 과목", joinOrEmpty(payload.subjects)],
     ["현재 성적·수준", emptyFallback(payload.currentLevel)],

@@ -17,7 +17,7 @@ export async function setAdminAuthed(password: string): Promise<boolean> {
   const jar = await cookies();
   jar.set(COOKIE_NAME, password, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 14, // 14일
