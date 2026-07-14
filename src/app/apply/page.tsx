@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import OfficialPaymentNotice from "@/components/OfficialPaymentNotice";
 
 const GRADES = [
   "초등학교 1학년", "초등학교 2학년", "초등학교 3학년",
@@ -138,8 +139,12 @@ export default function ApplyPage() {
             자녀 이름 없이, 학교·학년과 수학·과학 관련 상황만으로 멘토를 추천해드립니다.
           </p>
           <p className="text-xs text-blue-700">
-            작성해주신 내용은 검증된 KAIST 재학생 멘토들만 참고하며, 학부모님께 수수료는 없습니다.
+            작성해주신 내용은 검증된 KAIST 재학생 멘토들만 참고하며, 멘토 추천·매칭 수수료는 없습니다.
           </p>
+        </div>
+
+        <div className="mb-8">
+          <OfficialPaymentNotice />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -400,7 +405,7 @@ export default function ApplyPage() {
               {loading ? "신청 중..." : "신청하기"}
             </button>
             <p className="text-xs text-slate-400 text-center mt-2">
-              학부모님께는 어떤 수수료도 없습니다
+              멘토 추천·매칭 수수료는 없습니다
             </p>
           </div>
         </form>
