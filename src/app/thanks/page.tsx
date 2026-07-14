@@ -1,4 +1,5 @@
 import Link from "next/link";
+import OfficialPaymentNotice from "@/components/OfficialPaymentNotice";
 
 export default function ThanksPage() {
   return (
@@ -53,7 +54,7 @@ export default function ThanksPage() {
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                학부모님께서는 <strong>어떤 수수료도 내지 않으며</strong>, 자녀와 잘 맞는 멘토를
+                학부모님께서는 <strong>멘토 추천·매칭 수수료를 내지 않으며</strong>, 자녀와 잘 맞는 멘토를
                 찾을 때까지 여러 명의 KAIST 멘토를 차례로 만나보실 수 있습니다.
               </span>
             </p>
@@ -63,6 +64,10 @@ export default function ThanksPage() {
                 첫 상담 전 선생님의 가능 일정과 수업 방식을 함께 안내해드립니다.
               </span>
             </p>
+          </div>
+
+          <div className="mb-8 text-left">
+            <OfficialPaymentNotice />
           </div>
 
           <Link

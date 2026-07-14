@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { OFFICIAL_BANK_ACCOUNT } from "@/lib/payment";
 import { MATCHING_PLANS, formatWon } from "@/lib/pricing";
 import type { MentorRow, PurchaseOrderRow } from "@/lib/supabase";
-
-const BANK = {
-  name: "농협 (지역농협)",
-  account: "352-0308-0089-93",
-  holder: "박지원",
-};
 
 const STATUS_LABEL: Record<PurchaseOrderRow["status"], string> = {
   pending: "입금 확인 중",
@@ -158,13 +153,13 @@ export default function TeacherDashboard({
                   아래 계좌로 정확한 금액을 입금한 뒤 입금자명을 남겨주세요.
                 </p>
                 <dl className="mt-5 space-y-3 rounded-xl bg-slate-50 p-4 text-sm">
-                  <BankRow label="은행" value={BANK.name} />
-                  <BankRow label="계좌번호" value={BANK.account} />
-                  <BankRow label="예금주" value={BANK.holder} />
+                  <BankRow label="은행" value={OFFICIAL_BANK_ACCOUNT.bank} />
+                  <BankRow label="계좌번호" value={OFFICIAL_BANK_ACCOUNT.number} />
+                  <BankRow label="예금주" value={OFFICIAL_BANK_ACCOUNT.holder} />
                 </dl>
                 <button
                   type="button"
-                  onClick={() => navigator.clipboard.writeText(BANK.account.replaceAll("-", ""))}
+                  onClick={() => navigator.clipboard.writeText(OFFICIAL_BANK_ACCOUNT.number.replaceAll("-", ""))}
                   className="mt-3 text-xs font-semibold text-blue-700 hover:underline"
                 >
                   계좌번호 복사

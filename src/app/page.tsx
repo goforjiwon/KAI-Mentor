@@ -39,7 +39,7 @@ export default function HomePage() {
                 <Link href="/apply" className="inline-flex rounded-xl bg-blue-600 px-7 py-4 text-base font-bold text-white shadow-[0_10px_25px_rgba(37,99,235,0.2)] transition hover:-translate-y-0.5 hover:bg-blue-700">무료로 멘토 추천 받기</Link>
                 <Link href="/mentor-signup" className="text-sm font-semibold text-blue-700 hover:underline">선생님으로 시작하기 →</Link>
               </div>
-              <p className="mt-7 flex items-center gap-2 text-xs font-medium text-slate-600"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">✓</span>학부모 수수료 0원 · 영업일 24시간 이내 연락</p>
+              <p className="mt-7 flex items-center gap-2 text-xs font-medium text-slate-600"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">✓</span>멘토 추천·매칭 수수료 0원 · 영업일 24시간 이내 연락</p>
             </div>
             <div className="relative min-h-[360px] bg-slate-100 sm:min-h-[460px] lg:min-h-[500px]">
               <Image src="/images/mentor-study-hero.png" alt="선생님과 학생이 함께 수학 문제를 풀고 있는 모습" fill priority sizes="(max-width: 1024px) 100vw, 54vw" className="object-cover" />
