@@ -143,10 +143,6 @@ export default function ApplyPage() {
           </p>
         </div>
 
-        <div className="mb-8">
-          <OfficialPaymentNotice />
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-8">
 
           {/* 연락처 */}
@@ -387,6 +383,9 @@ export default function ApplyPage() {
               </div>
             </div>
           </section>
+
+          {/* 결제 안내 */}
+          <OfficialPaymentNotice />
 
           {/* 에러 메시지 */}
           {error && (
