@@ -14,7 +14,10 @@ export async function POST(request: Request) {
       !payload.phone ||
       !payload.studentGender ||
       !payload.schoolName ||
-      !payload.grade
+      !payload.grade ||
+      !payload.preferredDays?.length ||
+      !payload.preferredTime ||
+      !payload.desiredStartDate
     ) {
       return NextResponse.json(
         { success: false, message: "필수 항목을 입력해주세요." },
@@ -38,6 +41,9 @@ export async function POST(request: Request) {
         goal_date: payload.goalDate ?? "",
         child_personality: payload.childPersonality ?? [],
         mentor_priority: payload.mentorPriority ?? "",
+        preferred_days: payload.preferredDays ?? [],
+        preferred_time: payload.preferredTime ?? "",
+        desired_start_date: payload.desiredStartDate ?? "",
         extra_note: payload.extraNote ?? "",
         status: "new",
       })

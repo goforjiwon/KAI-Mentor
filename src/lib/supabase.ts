@@ -75,6 +75,9 @@ export type ApplicationRow = {
   goal_date: string;
   child_personality: string[];
   mentor_priority: string;
+  preferred_days: string[];
+  preferred_time: string;
+  desired_start_date: string;
   extra_note: string;
   status: ApplicationStatus;
   admin_memo: string | null;

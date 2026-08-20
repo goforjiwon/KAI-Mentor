@@ -36,12 +36,12 @@ export default function ThanksPage() {
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
-            신청이 잘 접수되었습니다.
+            무료 상담 신청이 잘 접수되었습니다.
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-6">
-            작성해주신 내용을 바탕으로, 검증된 KAIST 재학생 수학·과학 멘토 중에서
-            자녀분과 잘 맞을 것 같은 멘토를 골라 첫 미팅을 연결해 드리겠습니다.
+            작성해주신 학습 정보와 희망 일정을 바탕으로 상담을 진행한 뒤,
+            수업 조건에 맞는 KAIST 수학·과학 선생님을 찾아드리겠습니다.
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-left space-y-3 mb-8">
@@ -54,14 +54,13 @@ export default function ThanksPage() {
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                학부모님께서는 <strong>멘토 추천·매칭 수수료를 내지 않으며</strong>, 자녀와 잘 맞는 멘토를
-                찾을 때까지 여러 명의 KAIST 멘토를 차례로 만나보실 수 있습니다.
+                <strong>상담 비용은 없습니다.</strong> 상담에서 과목·목표·가능한 시간을 함께 정리합니다.
               </span>
             </p>
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                첫 상담 전 선생님의 가능 일정과 수업 방식을 함께 안내해드립니다.
+                상담 후 정리된 수업 조건과 일정에 맞는 선생님이 확인되면 첫 수업을 안내해드립니다.
               </span>
             </p>
           </div>

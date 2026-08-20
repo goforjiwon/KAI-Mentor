@@ -38,6 +38,9 @@ function formatMessage(payload: ApplicationPayload, siteUrl: string) {
     `🎯 <b>목표</b>: ${escape(emptyFallback(payload.goal))} (${escape(emptyFallback(payload.goalDate))})`,
     `🧠 <b>성향</b>: ${escape(joinOrDash(payload.childPersonality))}`,
     `💡 <b>바라는 점</b>: ${escape(emptyFallback(payload.mentorPriority))}`,
+    `📅 <b>가능 요일</b>: ${escape(joinOrDash(payload.preferredDays))}`,
+    `🕒 <b>가능 시간</b>: ${escape(emptyFallback(payload.preferredTime))}`,
+    `🚀 <b>희망 시작일</b>: ${escape(emptyFallback(payload.desiredStartDate))}`,
     payload.extraNote.trim()
       ? `📝 <b>기타</b>: ${escape(payload.extraNote)}`
       : "",

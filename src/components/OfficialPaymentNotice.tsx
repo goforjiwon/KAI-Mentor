@@ -53,11 +53,11 @@ export default function OfficialPaymentNotice() {
               id="official-payment-title"
               className="mt-1 text-base font-bold text-slate-900 sm:text-lg"
             >
-              수업료는 아래 공식 계좌로 결제해 주세요
+              무료 상담에는 결제가 필요하지 않습니다
             </h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              결제 내역을 정확히 확인하고 수업 관련 안내를 계속 도와드릴 수 있도록,
-              수업료 결제는 카이멘토 공식 계좌를 통해서만 가능합니다.
+              상담 후 선생님과 수업 일정이 확정되면 수업료와 결제 시점을 별도로 안내해드립니다.
+              안내받은 수업료는 카이멘토 공식 계좌를 통해서만 결제해 주세요.
             </p>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function OfficialPaymentNotice() {
 
         <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs leading-5 text-slate-500">
-            멘토 매칭 후 안내받은 금액과 시점에 맞춰 결제하시면 됩니다.
+            수업 확정 후 안내받은 금액과 시점에 맞춰 결제하시면 됩니다.
           </p>
           <button
             type="button"

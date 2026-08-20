@@ -21,6 +21,9 @@ create table if not exists public.applications (
   goal_date text not null default '',
   child_personality text[] not null default '{}',
   mentor_priority text not null default '',
+  preferred_days text[] not null default '{}',
+  preferred_time text not null default '',
+  desired_start_date text not null default '',
   extra_note text not null default '',
 
   -- 운영자 관리용
@@ -60,7 +63,10 @@ create table if not exists public.mentors (
 -- 기존 프로젝트에 이 파일을 다시 실행해도 신규 필드가 추가되도록 보강
 alter table public.applications
   add column if not exists student_gender text not null default '',
-  add column if not exists school_name text not null default '';
+  add column if not exists school_name text not null default '',
+  add column if not exists preferred_days text[] not null default '{}',
+  add column if not exists preferred_time text not null default '',
+  add column if not exists desired_start_date text not null default '';
 
 alter table public.mentors
   add column if not exists auth_user_id uuid references auth.users(id) on delete set null,

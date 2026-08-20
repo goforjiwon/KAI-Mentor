@@ -37,6 +37,8 @@ const MENTOR_PRIORITIES = [
   "진로·대학(이공계) 이야기",
 ];
 
+const WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"];
+
 type FormState = {
   parentName: string;
   phone: string;
@@ -50,6 +52,9 @@ type FormState = {
   goalDate: string;
   childPersonality: string[];
   mentorPriority: string;
+  preferredDays: string[];
+  preferredTime: string;
+  desiredStartDate: string;
   extraNote: string;
 };
 
@@ -64,10 +69,11 @@ export default function ApplyPage() {
     parentName: "", phone: "", studentGender: "", schoolName: "", grade: "",
     subjects: [], currentLevel: "", difficulties: "",
     goal: "", goalDate: "", childPersonality: [],
-    mentorPriority: "", extraNote: "",
+    mentorPriority: "", preferredDays: [], preferredTime: "",
+    desiredStartDate: "", extraNote: "",
   });
 
-  function toggleArray(field: "subjects" | "childPersonality", value: string) {
+  function toggleArray(field: "subjects" | "childPersonality" | "preferredDays", value: string) {
     setForm((prev) => ({
       ...prev,
       [field]: prev[field].includes(value)
@@ -96,6 +102,14 @@ export default function ApplyPage() {
     }
     if (!form.mentorPriority) {
       setError("멘토에게 바라는 점을 선택해주세요.");
+      return;
+    }
+    if (
+      form.preferredDays.length === 0 ||
+      !form.preferredTime.trim() ||
+      !form.desiredStartDate
+    ) {
+      setError("가능한 수업 요일·시간과 희망 시작일을 입력해주세요.");
       return;
     }
 
@@ -128,7 +142,7 @@ export default function ApplyPage() {
             ← 홈으로
           </Link>
           <span className="text-slate-300">·</span>
-          <span className="text-sm font-semibold text-slate-800">멘토 추천 신청</span>
+          <span className="text-sm font-semibold text-slate-800">무료 상담 신청</span>
         </div>
       </header>
 
@@ -136,10 +150,10 @@ export default function ApplyPage() {
         {/* 안내 박스 */}
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
           <p className="text-sm text-blue-900 font-medium mb-1">
-            자녀 이름 없이, 학교·학년과 수학·과학 관련 상황만으로 멘토를 추천해드립니다.
+            학습 고민과 가능한 시간을 알려주시면 무료 상담 후 수업 조건에 맞는 KAIST 선생님을 찾아드립니다.
           </p>
           <p className="text-xs text-blue-700">
-            작성해주신 내용은 검증된 KAIST 재학생 멘토들만 참고하며, 멘토 추천·매칭 수수료는 없습니다.
+            상담은 무료이며, 입력한 일정은 실제 수업이 가능한 선생님을 찾는 데 사용합니다.
           </p>
         </div>
 
@@ -315,6 +329,72 @@ export default function ApplyPage() {
             </div>
           </section>
 
+          {/* 희망 수업 일정 */}
+          <section>
+            <h2 className="font-semibold text-slate-800 text-base mb-4 pb-2 border-b border-slate-200">
+              희망 수업 일정
+            </h2>
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  가능한 요일 <span className="text-red-500">*</span>{" "}
+                  <span className="text-xs font-normal text-slate-500">(복수 선택 가능)</span>
+                </label>
+                <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+                  {WEEKDAYS.map((day) => {
+                    const selected = form.preferredDays.includes(day);
+                    return (
+                      <label
+                        key={day}
+                        className={`flex cursor-pointer items-center justify-center rounded-lg border px-3 py-2.5 text-sm font-medium transition ${
+                          selected
+                            ? "border-blue-600 bg-blue-50 text-blue-700"
+                            : "border-slate-300 bg-white text-slate-600 hover:border-blue-300"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={selected}
+                          onChange={() => toggleArray("preferredDays", day)}
+                        />
+                        {day}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  가능한 시간 <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="예: 월·수 오후 7시 이후, 토 오전 10시~오후 2시"
+                  className={INPUT_CLASS}
+                  value={form.preferredTime}
+                  onChange={(e) => setForm({ ...form, preferredTime: e.target.value })}
+                />
+                <p className="mt-1.5 text-xs text-slate-500">
+                  가능한 시간대를 여러 개 적어주시면 더 빠르게 선생님을 찾을 수 있습니다.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  희망 시작일 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  className={INPUT_CLASS}
+                  value={form.desiredStartDate}
+                  onChange={(e) => setForm({ ...form, desiredStartDate: e.target.value })}
+                />
+              </div>
+            </div>
+          </section>
+
           {/* 자녀 성향 */}
           <section>
             <h2 className="font-semibold text-slate-800 text-base mb-4 pb-2 border-b border-slate-200">
@@ -401,10 +481,10 @@ export default function ApplyPage() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-base hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? "신청 중..." : "신청하기"}
+              {loading ? "신청 중..." : "무료 상담 신청하기"}
             </button>
             <p className="text-xs text-slate-400 text-center mt-2">
-              멘토 추천·매칭 수수료는 없습니다
+              상담 비용은 없습니다
             </p>
           </div>
         </form>

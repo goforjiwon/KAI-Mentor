@@ -11,6 +11,9 @@ export type ApplicationPayload = {
   goalDate: string;
   childPersonality: string[];
   mentorPriority: string;
+  preferredDays: string[];
+  preferredTime: string;
+  desiredStartDate: string;
   extraNote: string;
 };
 
@@ -42,6 +45,9 @@ function makeTextBody(payload: ApplicationPayload) {
     `- 목표 시점: ${emptyFallback(payload.goalDate)}`,
     `- 자녀 성향: ${joinOrEmpty(payload.childPersonality)}`,
     `- 멘토에게 바라는 점: ${emptyFallback(payload.mentorPriority)}`,
+    `- 가능한 요일: ${joinOrEmpty(payload.preferredDays)}`,
+    `- 가능한 시간: ${emptyFallback(payload.preferredTime)}`,
+    `- 희망 시작일: ${emptyFallback(payload.desiredStartDate)}`,
     `- 기타 참고사항: ${emptyFallback(payload.extraNote)}`,
   ].join("\n");
 }
@@ -60,6 +66,9 @@ function makeHtmlBody(payload: ApplicationPayload) {
     ["목표 시점", emptyFallback(payload.goalDate)],
     ["자녀 성향", joinOrEmpty(payload.childPersonality)],
     ["멘토에게 바라는 점", emptyFallback(payload.mentorPriority)],
+    ["가능한 요일", joinOrEmpty(payload.preferredDays)],
+    ["가능한 시간", emptyFallback(payload.preferredTime)],
+    ["희망 시작일", emptyFallback(payload.desiredStartDate)],
     ["기타 참고사항", emptyFallback(payload.extraNote)],
   ];
 

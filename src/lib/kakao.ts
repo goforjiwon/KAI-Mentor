@@ -31,6 +31,9 @@ function formatMessage(payload: ApplicationPayload) {
     `📊 현재: ${payload.currentLevel || "-"}`,
     `🎯 목표: ${payload.goal || "-"} (${payload.goalDate || "-"})`,
     `💡 바라는 점: ${priority}`,
+    `📅 가능 요일: ${payload.preferredDays.length > 0 ? payload.preferredDays.join(", ") : "-"}`,
+    `🕒 가능 시간: ${payload.preferredTime || "-"}`,
+    `🚀 희망 시작일: ${payload.desiredStartDate || "-"}`,
   ].join("\n");
 }
 
