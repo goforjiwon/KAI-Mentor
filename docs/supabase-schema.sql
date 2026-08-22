@@ -7,6 +7,7 @@
 create table if not exists public.applications (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
+  submission_id uuid,
 
   -- 학부모 제출 데이터
   parent_name text not null,
@@ -62,6 +63,7 @@ create table if not exists public.mentors (
 
 -- 기존 프로젝트에 이 파일을 다시 실행해도 신규 필드가 추가되도록 보강
 alter table public.applications
+  add column if not exists submission_id uuid,
   add column if not exists student_gender text not null default '',
   add column if not exists school_name text not null default '',
   add column if not exists preferred_days text[] not null default '{}',
@@ -74,6 +76,28 @@ alter table public.mentors
   add column if not exists credit_balance integer not null default 0,
   add column if not exists total_credits_purchased integer not null default 0,
   add column if not exists total_credits_used integer not null default 0;
+
+alter table public.applications
+  drop constraint if exists applications_status_check;
+alter table public.applications
+  add constraint applications_status_check check (
+    status in ('new', 'contacted', 'matching', 'meeting_scheduled', 'meeting_done', 'paid', 'closed', 'spam')
+  );
+
+alter table public.mentors
+  drop constraint if exists mentors_status_check,
+  drop constraint if exists mentors_credit_balance_check,
+  drop constraint if exists mentors_total_credits_purchased_check,
+  drop constraint if exists mentors_total_credits_used_check;
+alter table public.mentors
+  add constraint mentors_status_check check (status in ('new', 'active', 'inactive', 'blocked')),
+  add constraint mentors_credit_balance_check check (credit_balance >= 0),
+  add constraint mentors_total_credits_purchased_check check (total_credits_purchased >= 0),
+  add constraint mentors_total_credits_used_check check (total_credits_used >= 0);
+
+create unique index if not exists applications_submission_id_uidx
+  on public.applications (submission_id)
+  where submission_id is not null;
 
 create index if not exists mentors_created_at_idx
   on public.mentors (created_at desc);
@@ -94,7 +118,7 @@ create table if not exists public.purchase_orders (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   order_number text not null unique,
-  mentor_id uuid not null references public.mentors(id) on delete cascade,
+  mentor_id uuid not null references public.mentors(id) on delete restrict,
   plan_code text not null,
   plan_name text not null,
   credit_count integer not null check (credit_count > 0),
@@ -124,7 +148,7 @@ create unique index if not exists purchase_orders_first_promo_uidx
 create table if not exists public.credit_transactions (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
-  mentor_id uuid not null references public.mentors(id) on delete cascade,
+  mentor_id uuid not null references public.mentors(id) on delete restrict,
   order_id uuid references public.purchase_orders(id) on delete set null,
   transaction_type text not null
     check (transaction_type in ('purchase', 'use', 'adjustment')),
@@ -140,6 +164,73 @@ create unique index if not exists credit_transactions_purchase_order_uidx
 create index if not exists credit_transactions_mentor_id_idx
   on public.credit_transactions (mentor_id, created_at desc);
 
+-- 결제·이용권 감사 기록은 회원 삭제로 사라지지 않도록 보호
+alter table public.purchase_orders
+  drop constraint if exists purchase_orders_mentor_id_fkey;
+alter table public.purchase_orders
+  add constraint purchase_orders_mentor_id_fkey
+  foreign key (mentor_id) references public.mentors(id) on delete restrict;
+
+alter table public.credit_transactions
+  drop constraint if exists credit_transactions_mentor_id_fkey;
+alter table public.credit_transactions
+  add constraint credit_transactions_mentor_id_fkey
+  foreign key (mentor_id) references public.mentors(id) on delete restrict;
+
+-- 서버리스 인스턴스 전체에서 공유하는 API 요청 제한 버킷
+create table if not exists public.api_rate_limits (
+  bucket_key text primary key,
+  window_started_at timestamptz not null default now(),
+  request_count integer not null default 1 check (request_count > 0)
+);
+
+create or replace function public.consume_api_rate_limit(
+  p_bucket_key text,
+  p_limit integer,
+  p_window_seconds integer
+) returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_allowed boolean;
+begin
+  if length(p_bucket_key) > 200 or p_limit < 1 or p_window_seconds < 1 or p_window_seconds > 86400 then
+    raise exception 'invalid rate limit parameters';
+  end if;
+
+  insert into public.api_rate_limits as limits (
+    bucket_key,
+    window_started_at,
+    request_count
+  ) values (
+    p_bucket_key,
+    statement_timestamp(),
+    1
+  )
+  on conflict (bucket_key) do update
+  set request_count = case
+        when limits.window_started_at <= statement_timestamp() - make_interval(secs => p_window_seconds)
+          then 1
+        else limits.request_count + 1
+      end,
+      window_started_at = case
+        when limits.window_started_at <= statement_timestamp() - make_interval(secs => p_window_seconds)
+          then statement_timestamp()
+        else limits.window_started_at
+      end
+  returning request_count <= p_limit into v_allowed;
+
+  return v_allowed;
+end;
+$$;
+
+revoke all on table public.api_rate_limits from public, anon, authenticated;
+grant select, insert, update, delete on table public.api_rate_limits to service_role;
+revoke all on function public.consume_api_rate_limit(text, integer, integer) from public, anon, authenticated;
+grant execute on function public.consume_api_rate_limit(text, integer, integer) to service_role;
+
 -- 운영자 입금 승인: 주문 잠금 → 잔액 충전 → 주문 완료 → 원장 기록을 한 트랜잭션으로 처리
 create or replace function public.approve_purchase_order(
   p_order_id uuid,
@@ -147,7 +238,7 @@ create or replace function public.approve_purchase_order(
 ) returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
 declare
   v_order public.purchase_orders%rowtype;
@@ -219,6 +310,7 @@ alter table public.applications enable row level security;
 alter table public.mentors enable row level security;
 alter table public.purchase_orders enable row level security;
 alter table public.credit_transactions enable row level security;
+alter table public.api_rate_limits enable row level security;
 
 -- (정책을 굳이 안 만들어도 서비스 롤은 통과한다. anon에는 안전하게 접근 차단.)
 

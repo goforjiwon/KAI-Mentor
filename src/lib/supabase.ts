@@ -1,14 +1,13 @@
+import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // 서버 전용 Supabase 클라이언트 (lazy 초기화).
 // - Service Role Key는 절대 브라우저로 노출되면 안 되므로 서버에서만 import 해야 한다.
 // - 빌드 타임에는 환경변수가 없을 수 있으므로, 실제 쿼리 시점에만 클라이언트를 생성한다.
 
-let cached: SupabaseClient | null = null;
+let cachedAdminClient: SupabaseClient | null = null;
 
-function getClient(): SupabaseClient {
-  if (cached) return cached;
-
+function getConfig() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -17,21 +16,20 @@ function getClient(): SupabaseClient {
       "SUPABASE_URL 또는 SUPABASE_SERVICE_ROLE_KEY 환경변수가 설정되지 않았습니다."
     );
   }
+  return { url, key };
+}
 
-  cached = createClient(url, key, {
+export function getSupabaseAdmin(): SupabaseClient {
+  if (cachedAdminClient) return cachedAdminClient;
+  const { url, key } = getConfig();
+  cachedAdminClient = createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-  return cached;
+  return cachedAdminClient;
 }
 
 export function createAuthServerClient(): SupabaseClient {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error(
-      "SUPABASE_URL 또는 SUPABASE_SERVICE_ROLE_KEY 환경변수가 설정되지 않았습니다."
-    );
-  }
+  const { url, key } = getConfig();
   return createClient(url, key, {
     auth: {
       autoRefreshToken: false,
@@ -40,15 +38,6 @@ export function createAuthServerClient(): SupabaseClient {
     },
   });
 }
-
-// 기존 코드가 supabaseAdmin.from(...) 형태로 쓰기 때문에 Proxy로 호환성 유지.
-export const supabaseAdmin = new Proxy({} as SupabaseClient, {
-  get(_target, prop, receiver) {
-    const client = getClient();
-    const value = Reflect.get(client, prop, receiver);
-    return typeof value === "function" ? value.bind(client) : value;
-  },
-});
 
 export type ApplicationStatus =
   | "new"

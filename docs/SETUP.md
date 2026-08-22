@@ -41,6 +41,7 @@
 | `SUPABASE_URL` | 1-3에서 복사한 Project URL | 필수 |
 | `SUPABASE_SERVICE_ROLE_KEY` | 1-3에서 복사한 service_role key | 필수 |
 | `ADMIN_PASSWORD` | 원하는 비밀번호 (예: `kmentor-admin-2026!`) | `/admin` 로그인용 |
+| `ADMIN_SESSION_SECRET` | 32자 이상의 별도 무작위 문자열 | 관리자 세션 서명용 |
 | `MENTOR_SESSION_SECRET` | 32자 이상의 무작위 문자열 | 선생님 로그인 세션 서명용 |
 | `RESEND_API_KEY` | Resend API Key | 이메일 알림 (선택, 없으면 이메일만 건너뜀) |
 | `APPLICATION_EMAIL_FROM` | 인증된 발신 주소 | 이메일 발신 주소 (선택, 없으면 이메일만 건너뜀) |

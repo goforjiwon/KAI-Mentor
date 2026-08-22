@@ -1,43 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OfficialPaymentNotice from "@/components/OfficialPaymentNotice";
-
-const GRADES = [
-  "초등학교 1학년", "초등학교 2학년", "초등학교 3학년",
-  "초등학교 4학년", "초등학교 5학년", "초등학교 6학년",
-  "중학교 1학년", "중학교 2학년", "중학교 3학년",
-  "고등학교 1학년", "고등학교 2학년", "고등학교 3학년",
-];
+import {
+  APPLICATION_SUBJECTS,
+  CHILD_PERSONALITIES,
+  GRADES,
+  MENTOR_PRIORITIES,
+  sortByOptionOrder,
+  WEEKDAYS,
+} from "@/lib/formOptions";
 
 // 체크박스/라디오 선택지는 전부 한국어 라벨을 그대로 저장한다 (id/label 분리 X).
 // 짧은 키(예: 수학)는 화면 표시용 간결한 이름,
 // 전체 라벨(예: "수학 (기초 연산부터 심화까지)")은 '폼에서만' 안내용으로 쓰는 방식도 가능하지만
 // DB에 들어가는 값은 짧은 한국어 쪽을 선택.
-const SUBJECTS = [
-  { value: "수학", hint: "" },
-  { value: "과학", hint: "(물리·화학·생명과학·지구과학 포함)" },
-];
-
-const PERSONALITIES = [
-  "내성적인 편",
-  "외향적인 편",
-  "쉽게 지치는 편",
-  "완벽주의 성향",
-  "말이 많은 편",
-  "조용한 편",
-];
-
-const MENTOR_PRIORITIES = [
-  "수학·과학 개념 설명·문제풀이",
-  "공부 방법·루틴 잡기",
-  "멘탈 관리·동기 부여",
-  "진로·대학(이공계) 이야기",
-];
-
-const WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"];
+const SUBJECT_HINTS: Record<string, string> = {
+  과학: "(물리·화학·생명과학·지구과학 포함)",
+};
 
 type FormState = {
   parentName: string;
@@ -63,6 +45,7 @@ const INPUT_CLASS =
 
 export default function ApplyPage() {
   const router = useRouter();
+  const submissionId = useRef<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({
@@ -74,12 +57,22 @@ export default function ApplyPage() {
   });
 
   function toggleArray(field: "subjects" | "childPersonality" | "preferredDays", value: string) {
-    setForm((prev) => ({
-      ...prev,
-      [field]: prev[field].includes(value)
+    setForm((prev) => {
+      const nextValues = prev[field].includes(value)
         ? prev[field].filter((v) => v !== value)
-        : [...prev[field], value],
-    }));
+        : [...prev[field], value];
+      const optionOrder =
+        field === "subjects"
+          ? APPLICATION_SUBJECTS
+          : field === "childPersonality"
+            ? CHILD_PERSONALITIES
+            : WEEKDAYS;
+
+      return {
+        ...prev,
+        [field]: sortByOptionOrder(nextValues, optionOrder),
+      };
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -100,6 +93,15 @@ export default function ApplyPage() {
       setError("도움이 필요한 과목을 최소 1개 선택해주세요.");
       return;
     }
+    if (
+      !form.currentLevel.trim() ||
+      !form.difficulties.trim() ||
+      !form.goal.trim() ||
+      !form.goalDate.trim()
+    ) {
+      setError("현재 성적·수준, 어려워하는 부분, 목표와 목표 시점을 입력해주세요.");
+      return;
+    }
     if (!form.mentorPriority) {
       setError("멘토에게 바라는 점을 선택해주세요.");
       return;
@@ -115,10 +117,11 @@ export default function ApplyPage() {
 
     setLoading(true);
     try {
+      submissionId.current ??= crypto.randomUUID();
       const res = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, submissionId: submissionId.current }),
       });
       const json = await res.json();
       if (json.success) {
@@ -256,18 +259,18 @@ export default function ApplyPage() {
                   <span className="text-xs font-normal text-slate-500">(복수 선택 가능)</span>
                 </label>
                 <div className="space-y-2">
-                  {SUBJECTS.map((s) => (
-                    <label key={s.value} className="flex items-center gap-2.5 cursor-pointer">
+                  {APPLICATION_SUBJECTS.map((subject) => (
+                    <label key={subject} className="flex items-center gap-2.5 cursor-pointer">
                       <input
                         type="checkbox"
                         className="w-4 h-4 rounded accent-blue-600"
-                        checked={form.subjects.includes(s.value)}
-                        onChange={() => toggleArray("subjects", s.value)}
+                        checked={form.subjects.includes(subject)}
+                        onChange={() => toggleArray("subjects", subject)}
                       />
                       <span className="text-sm text-slate-700">
-                        {s.value}
-                        {s.hint && (
-                          <span className="text-slate-500"> {s.hint}</span>
+                        {subject}
+                        {SUBJECT_HINTS[subject] && (
+                          <span className="text-slate-500"> {SUBJECT_HINTS[subject]}</span>
                         )}
                       </span>
                     </label>
@@ -402,11 +405,11 @@ export default function ApplyPage() {
             </h2>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                자녀 성향 <span className="text-red-500">*</span>{" "}
-                <span className="text-xs font-normal text-slate-500">(복수 선택 가능)</span>
+                자녀 성향{" "}
+                <span className="text-xs font-normal text-slate-500">(선택 · 복수 선택 가능)</span>
               </label>
               <div className="grid grid-cols-2 gap-2">
-                {PERSONALITIES.map((p) => (
+                {CHILD_PERSONALITIES.map((p) => (
                   <label key={p} className="flex items-center gap-2.5 cursor-pointer">
                     <input
                       type="checkbox"

@@ -1,6 +1,7 @@
+import "server-only";
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
-import { supabaseAdmin, type MentorRow } from "@/lib/supabase";
+import { getSupabaseAdmin, type MentorRow } from "@/lib/supabase";
 
 const COOKIE_NAME = "kmentor_teacher";
 const SESSION_DAYS = 14;
@@ -80,10 +81,11 @@ export async function getAuthedMentor(): Promise<MentorRow | null> {
   const userId = await getMentorUserId();
   if (!userId) return null;
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from("mentors")
     .select("*")
     .eq("auth_user_id", userId)
+    .in("status", ["new", "active"])
     .maybeSingle();
 
   if (error) {

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { isAdminAuthed } from "@/lib/adminAuth";
 import {
-  supabaseAdmin,
+  getSupabaseAdmin,
   type ApplicationRow,
   type MentorRow,
   type PurchaseOrderRow,
@@ -15,6 +15,7 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
   const [applicationsResult, mentorsResult, ordersResult] = await Promise.all([
     supabaseAdmin
     .from("applications")

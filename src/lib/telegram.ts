@@ -54,7 +54,7 @@ function formatMessage(payload: ApplicationPayload, siteUrl: string) {
 export async function sendTelegramNotification(payload: ApplicationPayload) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  const siteUrl = process.env.SITE_URL ?? "https://kmentor-eight.vercel.app";
+  const siteUrl = process.env.SITE_URL ?? "https://eaureca.com";
 
   if (!token || !chatId) {
     return { sent: false, reason: "env_missing" };
@@ -73,6 +73,7 @@ export async function sendTelegramNotification(payload: ApplicationPayload) {
         parse_mode: "HTML",
         disable_web_page_preview: true,
       }),
+      signal: AbortSignal.timeout(8_000),
     }
   );
 

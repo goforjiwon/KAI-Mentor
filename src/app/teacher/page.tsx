@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAuthedMentor } from "@/lib/mentorAuth";
-import { supabaseAdmin, type PurchaseOrderRow } from "@/lib/supabase";
+import { getSupabaseAdmin, type PurchaseOrderRow } from "@/lib/supabase";
 import TeacherDashboard from "./TeacherDashboard";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export default async function TeacherPage() {
   const mentor = await getAuthedMentor();
   if (!mentor) redirect("/teacher/login");
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from("purchase_orders")
     .select("*")
     .eq("mentor_id", mentor.id)

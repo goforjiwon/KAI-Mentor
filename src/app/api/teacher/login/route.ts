@@ -1,22 +1,24 @@
 import { NextResponse } from "next/server";
 import { setMentorSession } from "@/lib/mentorAuth";
-import { createAuthServerClient, supabaseAdmin } from "@/lib/supabase";
+import { consumeRateLimit, readJsonObject, RequestError, requiredString } from "@/lib/requestSecurity";
+import { createAuthServerClient, getSupabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { email?: string; password?: string };
-    const email = body.email?.trim().toLowerCase();
-    if (!email || !body.password) {
+    if (!(await consumeRateLimit(request, "teacher-login", 10, 15 * 60))) {
       return NextResponse.json(
-        { success: false, message: "이메일과 비밀번호를 입력해주세요." },
-        { status: 400 }
+        { success: false, message: "로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요." },
+        { status: 429, headers: { "Retry-After": "900" } }
       );
     }
+    const body = await readJsonObject(request, 8 * 1024);
+    const email = requiredString(body, "email", 254).toLowerCase();
+    const password = requiredString(body, "password", 128);
 
     const authClient = createAuthServerClient();
     const { data, error } = await authClient.auth.signInWithPassword({
       email,
-      password: body.password,
+      password,
     });
 
     if (error || !data.user) {
@@ -26,15 +28,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: mentor } = await supabaseAdmin
+    const { data: mentor, error: mentorError } = await getSupabaseAdmin()
       .from("mentors")
-      .select("id")
+      .select("id,status")
       .eq("auth_user_id", data.user.id)
       .maybeSingle();
 
-    if (!mentor) {
+    if (mentorError) throw mentorError;
+    if (!mentor || !["new", "active"].includes(mentor.status)) {
       return NextResponse.json(
-        { success: false, message: "선생님 계정을 찾을 수 없습니다." },
+        { success: false, message: "현재 이용할 수 없는 선생님 계정입니다." },
         { status: 403 }
       );
     }
@@ -43,9 +46,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[teacher-login] 오류:", error);
+    const status = error instanceof RequestError ? error.status : 500;
     return NextResponse.json(
-      { success: false, message: "로그인 중 오류가 발생했습니다." },
-      { status: 500 }
+      { success: false, message: error instanceof RequestError ? error.message : "로그인 중 오류가 발생했습니다." },
+      { status }
     );
   }
 }

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthed } from "@/lib/adminAuth";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
   if (!(await isAdminAuthed())) {
     return NextResponse.json({ success: false, message: "unauthorized" }, { status: 401 });
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from("mentors")
     .select("*")
     .order("created_at", { ascending: false })

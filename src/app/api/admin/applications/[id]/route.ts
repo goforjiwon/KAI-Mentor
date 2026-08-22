@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthed } from "@/lib/adminAuth";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 const ALLOWED_STATUSES = [
   "new",
@@ -42,7 +42,7 @@ export async function PATCH(
     return NextResponse.json({ success: false, message: "변경 내용 없음" }, { status: 400 });
   }
 
-  const { error } = await supabaseAdmin
+  const { error } = await getSupabaseAdmin()
     .from("applications")
     .update(update)
     .eq("id", id);
@@ -51,21 +51,5 @@ export async function PATCH(
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
-}
-
-export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  if (!(await isAdminAuthed())) {
-    return NextResponse.json({ success: false, message: "unauthorized" }, { status: 401 });
-  }
-
-  const { id } = await params;
-  const { error } = await supabaseAdmin.from("applications").delete().eq("id", id);
-  if (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  }
   return NextResponse.json({ success: true });
 }

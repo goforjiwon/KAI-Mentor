@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-const SUBJECTS = ["수학", "과학", "수학+과학"];
-const TEACHING_MODES = ["대면", "온라인", "둘 다"];
+import { MENTOR_SUBJECTS, TEACHING_MODES } from "@/lib/formOptions";
 
 type FormState = {
   email: string;
@@ -205,7 +203,7 @@ export default function MentorSignupPage() {
                   가능 과목 <span className="text-red-500">*</span>
                 </label>
                 <div className="space-y-2">
-                  {SUBJECTS.map((subject) => (
+                  {MENTOR_SUBJECTS.map((subject) => (
                     <label key={subject} className="flex items-center gap-2.5 cursor-pointer">
                       <input
                         type="radio"

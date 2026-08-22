@@ -54,6 +54,7 @@ async function refreshAccessToken(
       client_id: restApiKey,
       refresh_token: refreshToken,
     }),
+    signal: AbortSignal.timeout(8_000),
   });
 
   if (!res.ok) {
@@ -94,6 +95,7 @@ async function sendMemoMessage(accessToken: string, text: string, linkUrl: strin
       body: new URLSearchParams({
         template_object: JSON.stringify(template),
       }),
+      signal: AbortSignal.timeout(8_000),
     }
   );
 
@@ -104,7 +106,7 @@ export async function sendKakaoSelfMessage(payload: ApplicationPayload) {
   const restApiKey = process.env.KAKAO_REST_API_KEY;
   const accessToken = process.env.KAKAO_ACCESS_TOKEN;
   const refreshToken = process.env.KAKAO_REFRESH_TOKEN;
-  const siteUrl = process.env.SITE_URL ?? "https://kmentor-eight.vercel.app";
+  const siteUrl = process.env.SITE_URL ?? "https://eaureca.com";
 
   if (!restApiKey || !accessToken) {
     console.warn("[kakao] 환경변수 미설정 — 카카오 알림 건너뜀");
@@ -126,10 +128,7 @@ export async function sendKakaoSelfMessage(payload: ApplicationPayload) {
       // 참고: Vercel 런타임에서는 process.env를 런타임에 덮어써도 다음 invoke에 반영 X.
       // refresh token이 갱신되면 Vercel 환경변수를 수동 업데이트 해야 함 (가이드에 명시).
       if (refreshed.refreshToken && refreshed.refreshToken !== refreshToken) {
-        console.warn(
-          "[kakao] 새 refresh_token 발급됨 — Vercel 환경변수 KAKAO_REFRESH_TOKEN 업데이트 필요:",
-          refreshed.refreshToken
-        );
+        console.warn("[kakao] 새 refresh_token 발급됨 — Vercel 환경변수 업데이트 필요");
       }
     }
   }

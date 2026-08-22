@@ -29,6 +29,15 @@ function joinOrEmpty(values: string[], emptyText = "(미선택)") {
   return values.length > 0 ? values.join(", ") : emptyText;
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function makeTextBody(payload: ApplicationPayload) {
   return [
     "카이멘토(KAIMentor) 신규 신청이 접수되었습니다.",
@@ -80,8 +89,8 @@ function makeHtmlBody(payload: ApplicationPayload) {
           .map(
             ([label, value]) => `
               <tr>
-                <th style="text-align: left; vertical-align: top; border: 1px solid #cbd5e1; padding: 8px; width: 180px; background: #f8fafc;">${label}</th>
-                <td style="border: 1px solid #cbd5e1; padding: 8px; white-space: pre-line;">${value}</td>
+                <th style="text-align: left; vertical-align: top; border: 1px solid #cbd5e1; padding: 8px; width: 180px; background: #f8fafc;">${escapeHtml(label)}</th>
+                <td style="border: 1px solid #cbd5e1; padding: 8px; white-space: pre-line;">${escapeHtml(value)}</td>
               </tr>
             `
           )
@@ -113,6 +122,7 @@ export async function sendApplicationEmail(payload: ApplicationPayload) {
       text: makeTextBody(payload),
       html: makeHtmlBody(payload),
     }),
+    signal: AbortSignal.timeout(8_000),
   });
 
   if (!res.ok) {

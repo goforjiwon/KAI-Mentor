@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthed } from "@/lib/adminAuth";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function PATCH(
   request: Request,
@@ -17,7 +17,7 @@ export async function PATCH(
   };
 
   if (body.action === "approve") {
-    const { data, error } = await supabaseAdmin.rpc("approve_purchase_order", {
+    const { data, error } = await getSupabaseAdmin().rpc("approve_purchase_order", {
       p_order_id: id,
       p_admin_note: body.adminNote?.trim() || null,
     });
@@ -38,7 +38,7 @@ export async function PATCH(
   }
 
   if (body.action === "mismatch") {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await getSupabaseAdmin()
       .from("purchase_orders")
       .update({ status: "mismatch", admin_note: body.adminNote?.trim() || "입금 정보 불일치" })
       .eq("id", id)
