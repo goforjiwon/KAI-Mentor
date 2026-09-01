@@ -77,17 +77,11 @@ export default function TeacherDashboard({
       <main id="home" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{mentor.name} 선생님, 반갑습니다</h1>
 
-        <section className="mt-7 grid gap-4 lg:grid-cols-[1.35fr_1fr]">
+        <section className="mt-7">
           <div className="grid overflow-hidden rounded-2xl border border-slate-200 bg-white sm:grid-cols-3">
             <Metric label="남은 상담 매칭 이용권" value={`${mentor.credit_balance ?? 0}회`} />
             <Metric label="누적 구매" value={`${mentor.total_credits_purchased ?? 0}회`} />
             <Metric label="사용 완료" value={`${mentor.total_credits_used ?? 0}회`} />
-          </div>
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5">
-            <p className="font-bold text-slate-900">과외 시급은 40,000원으로 고정됩니다</p>
-            <p className="mt-1.5 text-sm leading-6 text-slate-600">
-              학부모 화면에는 표시되지 않는 선생님 전용 안내입니다.
-            </p>
           </div>
         </section>
 
