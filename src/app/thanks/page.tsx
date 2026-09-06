@@ -48,19 +48,19 @@ export default function ThanksPage() {
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                <strong>보통 영업일 기준 24시간 이내</strong>에 문자로 연락을 드립니다.
+                신청 내용을 확인한 후 <strong>남겨주신 전화번호로 연락드립니다.</strong>
               </span>
             </p>
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                <strong>상담 비용은 없습니다.</strong> 상담에서 과목·목표·가능한 시간을 함께 정리합니다.
+                상담은 <strong>전화</strong>로 진행하며, 과목·목표·가능한 시간을 함께 정리합니다.
               </span>
             </p>
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                상담 후 정리된 수업 조건과 일정에 맞는 선생님이 확인되면 첫 수업을 안내해드립니다.
+                <strong>상담 비용은 없습니다.</strong> 상담 후 수업 조건에 맞는 선생님과 첫 수업을 안내해드립니다.
               </span>
             </p>
           </div>

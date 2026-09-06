@@ -467,9 +467,6 @@ export default function ApplyPage() {
             </div>
           </section>
 
-          {/* 결제 안내 */}
-          <OfficialPaymentNotice />
-
           {/* 에러 메시지 */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
@@ -491,6 +488,10 @@ export default function ApplyPage() {
             </p>
           </div>
         </form>
+
+        <div className="mt-8">
+          <OfficialPaymentNotice />
+        </div>
       </main>
 
       <footer className="border-t py-5 px-4 text-center text-xs text-slate-400">
