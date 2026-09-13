@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { TeacherLessonReports } from "@/components/LessonReports";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { OFFICIAL_BANK_ACCOUNT } from "@/lib/payment";
@@ -68,6 +69,7 @@ export default function TeacherDashboard({
           <Link href="/" className="text-xl font-bold tracking-tight text-blue-700">카이멘토</Link>
           <nav className="flex items-center gap-4 text-sm sm:gap-8">
             <a href="#home" className="font-semibold text-blue-700">선생님 홈</a>
+            <a href="#lesson-reports" className="font-semibold text-blue-700">수업 기록</a>
             <a href="#pricing" className="hidden text-slate-600 hover:text-slate-950 sm:block">이용권 구매</a>
             <button onClick={logout} className="text-slate-600 hover:text-slate-950">로그아웃</button>
           </nav>
@@ -84,6 +86,8 @@ export default function TeacherDashboard({
             <Metric label="사용 완료" value={`${mentor.total_credits_used ?? 0}회`} />
           </div>
         </section>
+
+        <TeacherLessonReports />
 
         <section id="pricing" className="scroll-mt-24 pt-14">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
