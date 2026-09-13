@@ -215,6 +215,7 @@ export default function AdminDashboard({
 
         <nav className="mt-8 flex flex-wrap gap-5 border-b border-slate-200 text-sm font-semibold">
           <a href="/admin/lesson-reports" className="border-b-2 border-transparent px-1 pb-3 text-blue-700">수업 기록</a>
+          <a href="/admin/matches" className="border-b-2 border-transparent px-1 pb-3 text-blue-700">강사·학부모 매칭</a>
           <Tab active={view === "members"} onClick={() => setView("members")}>회원 현황</Tab>
           <Tab active={view === "orders"} onClick={() => setView("orders")}>입금·이용권</Tab>
           <Tab active={view === "applications"} onClick={() => setView("applications")}>매칭 신청</Tab>

@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
       const json = await res.json();
       if (json.success) {
         const next = new URLSearchParams(window.location.search).get("next");
-        router.push(next && /^\/admin\/lesson-reports(?:\?report=[a-f0-9-]{36})?$/.test(next) ? next : "/admin");
+        router.push(next && /^\/admin\/(?:matches|lesson-reports(?:\?report=[a-f0-9-]{36})?)$/.test(next) ? next : "/admin");
         router.refresh();
       } else {
         setError(json.message ?? "비밀번호가 올바르지 않습니다.");
