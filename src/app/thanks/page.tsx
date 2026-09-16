@@ -40,21 +40,34 @@ export default function ThanksPage() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-6">
-            작성해주신 학습 정보와 희망 일정을 바탕으로 상담을 진행한 뒤,
-            수업 조건에 맞는 KAIST 수학·과학 선생님을 찾아드리겠습니다.
+            아래 버튼을 눌러 카이멘토 카카오톡 채널을 추가하고,
+            신청자 성함을 메시지로 보내주세요. 신청 내용을 확인하고 상담을 이어가겠습니다.
+          </p>
+
+          <a
+            href="https://pf.kakao.com/_TqcrX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center rounded-xl bg-[#FEE500] px-6 py-4 text-base font-semibold text-slate-900 transition-colors hover:bg-[#FADA0A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-900"
+          >
+            카카오톡으로 상담 이어가기
+          </a>
+          <p className="mt-3 mb-8 text-sm text-slate-600 leading-relaxed">
+            채널에서 채팅을 열고 “상담 신청한 ○○○입니다”라고 보내주세요.
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-left space-y-3 mb-8">
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                신청 내용을 확인한 후 <strong>남겨주신 전화번호로 연락드립니다.</strong>
+                보내주신 메시지를 확인한 뒤 <strong>보통 영업일 기준 24시간 이내</strong>에
+                카이멘토 채널에서 답장드립니다.
               </span>
             </p>
             <p className="flex items-start gap-2 text-sm text-slate-700">
               <span className="text-blue-500 shrink-0 mt-0.5">•</span>
               <span>
-                상담은 <strong>전화</strong>로 진행하며, 과목·목표·가능한 시간을 함께 정리합니다.
+                카카오톡으로 과목·목표·가능한 시간을 함께 정리하고, 필요하면 통화 일정을 조율합니다.
               </span>
             </p>
             <p className="flex items-start gap-2 text-sm text-slate-700">

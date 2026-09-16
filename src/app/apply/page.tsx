@@ -476,6 +476,9 @@ export default function ApplyPage() {
 
           {/* 제출 버튼 */}
           <div>
+            <p className="text-sm text-slate-600 text-center mb-3">
+              신청 후 카이멘토 카카오톡 채널에 성함을 보내주시면 상담이 이어집니다.
+            </p>
             <button
               type="submit"
               disabled={loading}
