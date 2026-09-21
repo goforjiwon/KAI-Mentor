@@ -14,12 +14,12 @@ export function MarketingHeader({ teacher = false }: { teacher?: boolean }) {
   return <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex min-h-20 max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:px-16">
     <Link href="/" className="shrink-0 text-2xl font-bold tracking-[-0.06em] text-blue-600 sm:text-3xl">카이멘토</Link>
     <nav aria-label="주 메뉴" className="order-last flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-2 border-t border-slate-100 pt-3 text-sm font-semibold text-slate-700 md:order-none md:w-auto md:gap-8 md:border-0 md:pt-0">{teacher ? <><Link href="/mentor-signup" className="py-2">선생님 지원</Link><a href="#process" className="py-2">이용 방법</a></> : <><a href="#process" className="py-2">이용 방법</a><a href="#care" className="py-2">정기 상담</a><Link href="/teacher-guide" className="rounded-lg bg-emerald-700 px-3 py-3 font-bold text-white hover:bg-emerald-800 md:rounded-none md:bg-transparent md:px-0 md:py-2 md:font-semibold md:text-slate-700 md:hover:bg-transparent md:hover:text-emerald-700">선생님 안내</Link></>}</nav>
-    <div className="flex items-center gap-3 sm:gap-5">{teacher && <Link href="/teacher/login" className="text-sm font-semibold text-slate-600">로그인</Link>}<Link href={teacher ? "/mentor-signup" : "/apply"} className={`rounded-xl px-4 py-3 text-sm font-bold text-white sm:px-6 ${teacher ? "bg-emerald-700 hover:bg-emerald-800" : "bg-blue-600 hover:bg-blue-700"}`}>{teacher ? "선생님 등록" : "무료 상담"}</Link></div>
+    <div className="flex flex-wrap items-center gap-3 sm:gap-5">{teacher && <Link href="/teacher/login" className="text-sm font-semibold text-slate-600">로그인</Link>}<Link href={teacher ? "/mentor-signup" : "/apply"} className={`rounded-xl px-4 py-3 text-sm font-bold text-white sm:px-6 ${teacher ? "bg-emerald-700 hover:bg-emerald-800" : "bg-blue-600 hover:bg-blue-700"}`}>{teacher ? "선생님 등록" : "무료 상담"}</Link></div>
   </div></header>;
 }
 
 export function MarketingCTA({ teacher = false }: { teacher?: boolean }) {
-  return <Link href={teacher ? "/mentor-signup" : "/apply"} className={`inline-flex items-center justify-center gap-5 rounded-xl px-7 py-4 text-base font-bold text-white shadow-sm transition-colors sm:text-lg ${teacher ? "bg-emerald-700 hover:bg-emerald-800" : "bg-blue-600 hover:bg-blue-700"}`}>{teacher ? "선생님으로 시작하기" : "첫 무료 상담 신청하기"}<span aria-hidden="true">→</span></Link>;
+  return <Link href={teacher ? "/mentor-signup" : "/apply"} className={`inline-flex w-full max-w-full items-center justify-center gap-3 rounded-xl px-5 py-4 sm:w-auto sm:gap-5 sm:px-7 text-base font-bold text-white shadow-sm transition-colors sm:text-lg ${teacher ? "bg-emerald-700 hover:bg-emerald-800" : "bg-blue-600 hover:bg-blue-700"}`}>{teacher ? "선생님으로 시작하기" : "첫 무료 상담 신청하기"}<span className="shrink-0" aria-hidden="true">→</span></Link>;
 }
 
 export function MarketingFooter({ teacher = false }: { teacher?: boolean }) {
